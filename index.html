@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pin Generator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="pin-generator half-width">
+                    <input id="pinNumber" class="form-control" type="text">
+                    <button id="generate-pin-btn"class="generate-btn">Generate Pin</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                
+                <div class="input-section half-width">
+                    <form action="" name="form" onsubmit="return false">
+                        <input id="pinNumberDisplay" class="form-control" type="text" name="display">
+                        <div class="numbers">
+                            <div class="calc-body">
+                                <div class="calc-button-row">
+                                  <div class="button" onclick="keypad(this.innerText)">7</div>
+                                  <div class="button" onclick="keypad(this.innerText)">8</div>
+                                  <div class="button" onclick="keypad(this.innerText)">9</div>
+                                </div>
+                                <div class="calc-button-row">
+                                  <div class="button" onclick="keypad(this.innerText)">4</div>
+                                  <div class="button" onclick="keypad(this.innerText)">5</div>
+                                  <div class="button" onclick="keypad(this.innerText)">6</div>
+                                </div>
+                                <div class="calc-button-row">
+                                  <div class="button" onclick="keypad(this.innerText)">1</div>
+                                  <div class="button" onclick="keypad(this.innerText)">2</div>
+                                  <div class="button" onclick="keypad(this.innerText)">3</div>
+                                </div>
+                                <div class="calc-button-row">
+                                    <div class="button" onclick="backspace()"><</div>
+                                    <div class="button" onclick="keypad(this.innerText)">0</div>
+                                    <div class="button" onclick="clearDisplay()">C</div>
+                                </div>
+                                <div>
+                                    <button id="submitBtn" type="submit" class="submit-btn">Submit</button>
+                                    <p class="action-left"> <span id="maxTry">3</span> try left</p>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                    </form>
+                   
+        </div>
+        <div class="notify-section">
+            <p id="pinUnsuccess" class="notify">❌ Pin Didn't Match, Please try again</p>
+            <p id="pinSuccess" class="notify">✅ Pin Matched... Secret door is opening for you</p>
+            <p id="alert" class="alert alert-danger notify" role="alert">please generate your pin!</p>
+            <p id="alertForPin" class="alert alert-danger notify" role="alert">please Enter your pin!</p>
+            <p id="btnDisable" class="alert alert-danger notify" role="alert">your submit Button and Generate pin button is disabled !</p>
+            
+        </div>
+
+        
+    </div>
+    <script>
+        const generateBtn = document.getElementById("generate-pin-btn"); 
+        generateBtn.addEventListener("click", function(){
+            const randomPin = Math.floor((Math.random() * 9000) + 1000);
+            document.getElementById("pinNumber").value = randomPin;
+
+            document.getElementById("pinSuccess").style.display = 'none';
+            document.getElementById("pinUnsuccess").style.display = "none";
+            document.getElementById("alert").style.display = "none";
+            
+        })
+        function keypad(value){
+            var takeInput = document.getElementById("pinNumberDisplay");
+            pinNumberDisplay.value = pinNumberDisplay.value + value;
+        }
+        function backspace(){
+            var removeValue = form.display.value;
+            form.display.value = removeValue.substring(0, removeValue.length - 1);
+        }
+        function clearDisplay(){
+            form.display.value = "";
+        }
+
+        const submitBtn = document.getElementById("submitBtn");
+        submitBtn.addEventListener("click", function(){
+            var generatePin = document.getElementById("pinNumber").value;
+            var inputPin =  document.getElementById("pinNumberDisplay").value;
+
+            if (generatePin == inputPin && inputPin != "") {
+                document.getElementById("pinSuccess").style.display = 'block';
+                document.getElementById("pinNumber").value = "";
+                document.getElementById("pinUnsuccess").style.display = "none";
+                document.getElementById("alert").style.display = "none";
+                document.getElementById("alertForPin").style.display = "none";
+            }
+            if(inputPin == "" && generatePin == ""){
+                document.getElementById("alert").style.display = "block";
+            }
+            if(inputPin == "" && generatePin > 0){
+                document.getElementById("alertForPin").style.display = "block";
+                document.getElementById("alert").style.display = "none";
+            }
+            if (generatePin != inputPin  && inputPin != "") {
+                document.getElementById("pinUnsuccess").style.display = "block";
+                document.getElementById("alertForPin").style.display = "none";
+                var maxTry = document.getElementById("maxTry").innerHTML;
+                var currentTry = parseInt(maxTry);
+                var tryLeft = (currentTry - 1);
+                document.getElementById("maxTry").innerHTML = tryLeft;
+                if (tryLeft <= 0 || tryLeft == 0) {
+                    document.getElementById('generate-pin-btn').disabled = true;
+                    document.getElementById('submitBtn').disabled = true;
+                    document.getElementById('submitBtn').style.opacity = "0.5";
+                    document.getElementById('generate-pin-btn').style.opacity = "0.5";
+                    document.getElementById("btnDisable").style.display = 'block';
+                    document.getElementById("pinUnsuccess").style.display = "none";   
+                }   
+            }
+            document.getElementById("pinNumberDisplay").value = "";
+        })
+
+        
+    </script>
+</body>
+</html>
